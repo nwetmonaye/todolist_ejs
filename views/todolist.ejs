@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>To Do List</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="todo-app">
+        <h2>To Do List <img src="/images/icon.png" /></h2>
+        <div class="row">
+          <input type="text" id="input-box" placeholder="Add your test" />
+          <button onclick="addTask()">Add</button>
+        </div>
+        <ul id="list-container">
+          <% for (let i = 0; i < tasks.length; i++) { %>
+          <li class="<%= tasks[i].checked ? 'checked' : '' %>">
+            <%= tasks[i].text %><span>×</span>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    <script src="todolist-service.js"></script>
+    <script>
+      const inputBox = document.getElementById("input-box");
+      const listContainer = document.getElementById("list-container");
+      function addTask() {
+        if (inputBox.value === "") {
+          alert("You must write something!!");
+        } else {
+          let li = document.createElement("li");
+          li.innerHTML = inputBox.value;
+          listContainer.appendChild(li);
+          let span = document.createElement("span");
+          span.innerHTML = "\u00d7";
+          li.appendChild(span);
+          saveData();
+        }
+        inputBox.value = "";
+      }
+      listContainer.addEventListener(
+        "click",
+        function (e) {
+          if (e.target.tagName === "LI") {
+            e.target.classList.toggle("checked");
+            saveData();
+          } else if (e.target.tagName === "SPAN") {
+            e.target.parentElement.remove();
+            saveData();
+          }
+        },
+        false
+      );
+      function saveData() {
+        localStorage.setItem("data", listContainer.innerHTML);
+      }
+      function showTast() {
+        listContainer.innerHTML = localStorage.getItem("data");
+      }
+      showTast();
+    </script>
+  </body>
+</html>
